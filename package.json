@@ -15,6 +15,7 @@
     "@remix-run/cloudflare-pages": "^2.9.1",
     "@remix-run/css-bundle": "^2.9.1",
     "@remix-run/react": "^2.9.1",
+    "@visx/curve": "^3.3.0",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
