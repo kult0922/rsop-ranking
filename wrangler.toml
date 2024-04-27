@@ -1,0 +1,4 @@
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "rsop"
+database_id = "01514bc2-da8a-466b-8309-768f30875e5d"
