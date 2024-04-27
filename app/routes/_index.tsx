@@ -8,11 +8,13 @@ interface Env {
 
 type User = {
   id: number;
-  username: string;
+  name: string;
 };
 
 export async function loader({ context }: LoaderFunctionArgs) {
-  const env = context.env as Env;
+  // @ts-ignore
+  const env = context.cloudflare.env as ENV;
+  console.log(env);
 
   const { results } = await env.DB.prepare("SELECT * FROM users").all<User>();
 
@@ -30,12 +32,13 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const { users } = useLoaderData<typeof loader>();
+  console.log(users);
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
 
-      {users.map((user) => (
-        <li key={user.id}>{user.username}</li>
+      {users.map((user: User) => (
+        <div key={user.id}>{user.name}</div>
       ))}
     </div>
   );
