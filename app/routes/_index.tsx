@@ -1,7 +1,7 @@
 import { ResponsiveLine } from "@nivo/line";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 
 interface Env {
   DB: D1Database;
@@ -90,7 +90,6 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const { data } = useLoaderData<typeof loader>();
-  console.log(data);
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
@@ -103,6 +102,28 @@ export default function Index() {
       >
         <ResponsiveLine
           data={data}
+          colors={{ scheme: "dark2" }}
+          curve="cardinal"
+          theme={{
+            legends: {
+              text: {
+                fontSize: 12,
+                fill: "#fff",
+              },
+            },
+            axis: {
+              ticks: {
+                text: {
+                  fill: "#fff",
+                },
+              },
+              legend: {
+                text: {
+                  fill: "#fff",
+                },
+              },
+            },
+          }}
           margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
           xScale={{ type: "point" }}
           yScale={{
@@ -128,7 +149,7 @@ export default function Index() {
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: "count",
+            legend: "BB",
             legendOffset: -40,
             legendPosition: "middle",
             truncateTickAt: 0,
@@ -168,6 +189,7 @@ export default function Index() {
           ]}
         />
       </div>
+      <Link to="/game">new game</Link>
     </div>
   );
 }
