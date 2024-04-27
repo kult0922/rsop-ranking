@@ -59,7 +59,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
   for (const userId of participantUserIds) {
     const user = users.find((user) => user.id === userId);
     if (!user) continue;
-    const userValues = [{ x: "start", y: 0 }];
+    const userValues = [{ x: "", y: 0 }];
     for (const gameId of heldGameIds) {
       const bb = gameId2Users.get(gameId)!.find((bb) => bb.userId === userId);
       const game = games.find((game) => game.id === gameId);
@@ -88,44 +88,13 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-const data_ = [
-  {
-    id: "japan",
-    color: "hsl(289, 70%, 50%)",
-    data: [
-      {
-        x: "plane",
-        y: 35,
-      },
-      {
-        x: "helicopter",
-        y: 213,
-      },
-    ],
-  },
-  {
-    id: "france",
-    color: "hsl(264, 70%, 50%)",
-    data: [
-      {
-        x: "plane",
-        y: 286,
-      },
-      {
-        x: "helicopter",
-        y: 100,
-      },
-    ],
-  },
-];
-
 export default function Index() {
   const { data } = useLoaderData<typeof loader>();
   console.log(data);
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix</h1>
+      <h1>RSOP</h1>
       <div
         style={{
           width: "500px",
@@ -150,7 +119,7 @@ export default function Index() {
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: "transportation",
+            legend: "stack",
             legendOffset: 36,
             legendPosition: "middle",
             truncateTickAt: 0,
