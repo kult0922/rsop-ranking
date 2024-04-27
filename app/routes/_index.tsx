@@ -11,15 +11,38 @@ type User = {
   name: string;
 };
 
+type Game = {
+  id: number;
+  name: string;
+  date: string;
+};
+
+type BBChange = {
+  id: number;
+  name: string;
+  date: string;
+};
+
 export async function loader({ context }: LoaderFunctionArgs) {
   // @ts-ignore
-  const env = context.cloudflare.env as ENV;
-  console.log(env);
+  const env = context.cloudflare.env as Env;
 
-  const { results } = await env.DB.prepare("SELECT * FROM users").all<User>();
+  const { results: users } = await env.DB.prepare(
+    "SELECT * FROM users"
+  ).all<User>();
+
+  const { results: games } = await env.DB.prepare(
+    "SELECT * FROM games"
+  ).all<Game>();
+
+  const { results: bbChange } = await env.DB.prepare(
+    "SELECT * FROM bb_change"
+  ).all<BBChange>();
 
   return json({
-    users: results ?? [],
+    users: users ?? [],
+    games: games ?? [],
+    bbChange: bbChange ?? [],
   });
 }
 
