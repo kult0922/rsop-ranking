@@ -1,0 +1,7 @@
+-- Migration number: 0002 	 2024-04-27T05:33:41.770Z
+CREATE TABLE `games` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name` TEXT NOT NULL,
+  `date` DATE NOT NULL
+);
+
