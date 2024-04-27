@@ -1,3 +1,4 @@
+import { ResponsiveLine } from "@nivo/line";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
@@ -19,8 +20,9 @@ type Game = {
 
 type BBChange = {
   id: number;
-  name: string;
-  date: string;
+  value: number;
+  user_id: number;
+  game_id: number;
 };
 
 export async function loader({ context }: LoaderFunctionArgs) {
@@ -39,10 +41,43 @@ export async function loader({ context }: LoaderFunctionArgs) {
     "SELECT * FROM bb_change"
   ).all<BBChange>();
 
+  games.sort((a, b) => a.date.localeCompare(b.date));
+
+  const participantUserIds = bbChange.map((bb) => bb.user_id);
+  const heldGameIds = new Set(bbChange.map((bb) => bb.game_id));
+
+  const gameId2Users = new Map<number, { userId: number; value: number }[]>();
+  bbChange.forEach((bb) => {
+    if (!gameId2Users.has(bb.game_id)) {
+      gameId2Users.set(bb.game_id, []);
+    }
+    gameId2Users.get(bb.game_id)!.push({ userId: bb.user_id, value: bb.value });
+  });
+
+  const data = [];
+
+  for (const userId of participantUserIds) {
+    const user = users.find((user) => user.id === userId);
+    if (!user) continue;
+    const userValues = [{ x: "start", y: 0 }];
+    for (const gameId of heldGameIds) {
+      const bb = gameId2Users.get(gameId)!.find((bb) => bb.userId === userId);
+      const game = games.find((game) => game.id === gameId);
+      if (!game) continue;
+      if (bb) {
+        userValues.push({ x: game?.name, y: bb.value });
+      } else {
+        userValues.push({ x: game?.name, y: 0 });
+      }
+    }
+    data.push({
+      id: user.name,
+      data: userValues,
+    });
+  }
+
   return json({
-    users: users ?? [],
-    games: games ?? [],
-    bbChange: bbChange ?? [],
+    data,
   });
 }
 
@@ -53,16 +88,117 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+const data_ = [
+  {
+    id: "japan",
+    color: "hsl(289, 70%, 50%)",
+    data: [
+      {
+        x: "plane",
+        y: 35,
+      },
+      {
+        x: "helicopter",
+        y: 213,
+      },
+    ],
+  },
+  {
+    id: "france",
+    color: "hsl(264, 70%, 50%)",
+    data: [
+      {
+        x: "plane",
+        y: 286,
+      },
+      {
+        x: "helicopter",
+        y: 100,
+      },
+    ],
+  },
+];
+
 export default function Index() {
-  const { users } = useLoaderData<typeof loader>();
-  console.log(users);
+  const { data } = useLoaderData<typeof loader>();
+  console.log(data);
+
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
-
-      {users.map((user: User) => (
-        <div key={user.id}>{user.name}</div>
-      ))}
+      <div
+        style={{
+          width: "500px",
+          height: "500px",
+        }}
+      >
+        <ResponsiveLine
+          data={data}
+          margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+          xScale={{ type: "point" }}
+          yScale={{
+            type: "linear",
+            min: "auto",
+            max: "auto",
+            stacked: true,
+            reverse: false,
+          }}
+          yFormat=" >-.2f"
+          axisTop={null}
+          axisRight={null}
+          axisBottom={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: "transportation",
+            legendOffset: 36,
+            legendPosition: "middle",
+            truncateTickAt: 0,
+          }}
+          axisLeft={{
+            tickSize: 5,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: "count",
+            legendOffset: -40,
+            legendPosition: "middle",
+            truncateTickAt: 0,
+          }}
+          pointSize={10}
+          pointColor={{ theme: "background" }}
+          pointBorderWidth={2}
+          pointBorderColor={{ from: "serieColor" }}
+          pointLabelYOffset={-12}
+          enableTouchCrosshair={true}
+          useMesh={true}
+          legends={[
+            {
+              anchor: "bottom-right",
+              direction: "column",
+              justify: false,
+              translateX: 100,
+              translateY: 0,
+              itemsSpacing: 0,
+              itemDirection: "left-to-right",
+              itemWidth: 80,
+              itemHeight: 20,
+              itemOpacity: 0.75,
+              symbolSize: 12,
+              symbolShape: "circle",
+              symbolBorderColor: "rgba(0, 0, 0, .5)",
+              effects: [
+                {
+                  on: "hover",
+                  style: {
+                    itemBackground: "rgba(0, 0, 0, .03)",
+                    itemOpacity: 1,
+                  },
+                },
+              ],
+            },
+          ]}
+        />
+      </div>
     </div>
   );
 }
