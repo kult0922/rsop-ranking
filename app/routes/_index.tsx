@@ -189,7 +189,7 @@ export default function Index() {
           ]}
         />
       </div>
-      <Link to="/game">new game</Link>
+      <Link to="/games">new game</Link>
     </div>
   );
 }

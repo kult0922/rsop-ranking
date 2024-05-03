@@ -1,7 +1,22 @@
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
+import { Input } from "@/components/ui/input";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import type {
+  ActionFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
+import { format } from "date-fns";
 import { useState } from "react";
 
 interface Env {
@@ -30,47 +45,29 @@ export async function loader({ context }: LoaderFunctionArgs) {
   // @ts-ignore
   const env = context.cloudflare.env as Env;
 
-  const { results: users } = await env.DB.prepare(
-    "SELECT * FROM users"
-  ).all<User>();
-
   const { results: games } = await env.DB.prepare(
     "SELECT * FROM games"
   ).all<Game>();
 
   return json({
-    users,
     games,
   });
 }
 
 export default function Index() {
-  const { users, games } = useLoaderData<typeof loader>();
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const { games } = useLoaderData<typeof loader>();
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>RSOP Game</h1>
+      <h1>RSOP Games</h1>
       <Link to="/">home</Link>
-
-      <form>
-        game name: <input placeholder="RSOP S1-1" />
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          className="rounded-md border"
-        />
-        {users.map((user) => {
-          return (
-            <div key={user.id}>
-              {user.name}
-              <input placeholder="BB" />
-            </div>
-          );
-        })}
-        <button type="submit">Submit</button>
-      </form>
+      {games.map((game) => (
+        <div>
+          <Link to={"/games/" + game.id} className="underline">
+            {game.name}
+          </Link>
+        </div>
+      ))}
     </div>
   );
 }
