@@ -43,8 +43,11 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   games.sort((a, b) => a.date.localeCompare(b.date));
 
-  const participantUserIds = bbChange.map((bb) => bb.user_id);
+  // 重複を削除してユーザIUを取得
+  const participantUserIds = new Set(bbChange.map((bb) => bb.user_id));
   const heldGameIds = new Set(bbChange.map((bb) => bb.game_id));
+
+  const heldGames = games.filter((game) => heldGameIds.has(game.id));
 
   const gameId2Users = new Map<number, { userId: number; value: number }[]>();
   bbChange.forEach((bb) => {
@@ -59,16 +62,12 @@ export async function loader({ context }: LoaderFunctionArgs) {
   for (const userId of participantUserIds) {
     const user = users.find((user) => user.id === userId);
     if (!user) continue;
-    const userValues = [{ x: "", y: 0 }];
-    for (const gameId of heldGameIds) {
-      const bb = gameId2Users.get(gameId)!.find((bb) => bb.userId === userId);
-      const game = games.find((game) => game.id === gameId);
-      if (!game) continue;
-      if (bb) {
-        userValues.push({ x: game?.name, y: bb.value });
-      } else {
-        userValues.push({ x: game?.name, y: 0 });
-      }
+    let acc = 0;
+    const userValues = [{ x: "", y: acc }];
+    for (const game of heldGames) {
+      const bb = gameId2Users.get(game.id)!.find((bb) => bb.userId === userId);
+      acc += bb?.value ?? 0;
+      userValues.push({ x: game.name, y: acc });
     }
     data.push({
       id: user.name,
@@ -90,6 +89,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const { data } = useLoaderData<typeof loader>();
+  console.log(data);
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
