@@ -78,10 +78,7 @@ export const action: ActionFunction = async ({ context, request, params }) => {
     .run();
 
   for (const bbChange_ of bbChanges) {
-    console.log(`bb_changes_${bbChange_.user_id}`);
-    console.log(bbChange_);
     const bbChangeValue = await formData.get(`bb_changes_${bbChange_.user_id}`);
-    console.log(bbChangeValue);
     if (bbChangeValue == null) continue;
     // bb_change table update
     const { success } = await env.DB.prepare(

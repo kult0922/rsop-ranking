@@ -1,3 +1,10 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ResponsiveLine } from "@nivo/line";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
@@ -32,13 +39,30 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   const heldGames = games.filter((game) => heldGameIds.has(game.id));
 
-  const gameId2Users = new Map<number, { userId: number; value: number }[]>();
+  const gameId2Users = new Map<
+    number,
+    { userId: number; value: number; userName: string }[]
+  >();
   bbChange.forEach((bb) => {
     if (!gameId2Users.has(bb.game_id)) {
       gameId2Users.set(bb.game_id, []);
     }
-    gameId2Users.get(bb.game_id)!.push({ userId: bb.user_id, value: bb.value });
+    gameId2Users.get(bb.game_id)!.push({
+      userId: bb.user_id,
+      value: bb.value,
+      userName: users.find((user) => user.id === bb.user_id)?.name ?? "",
+    });
   });
+
+  const gameResults = [];
+  for (const [gameId, bbChanges] of gameId2Users) {
+    gameResults.push({
+      gameId,
+      bbChanges,
+      gameName: games.find((game) => game.id === gameId)?.name,
+      date: games.find((game) => game.id === gameId)?.date,
+    });
+  }
 
   const data = [];
 
@@ -61,6 +85,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   return json({
     data,
+    gameResults,
   });
 }
 
@@ -72,15 +97,14 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-  const { data } = useLoaderData<typeof loader>();
-  console.log(data);
+  const { data, gameResults } = useLoaderData<typeof loader>();
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>RSOP</h1>
       <div
         style={{
-          width: "500px",
+          width: "100%",
           height: "500px",
         }}
       >
@@ -179,9 +203,26 @@ export default function Index() {
       <div>
         <Link to="/new-game">new game</Link>
       </div>
-      <div>
-        <Link to="/games">games</Link>
-      </div>
+      {gameResults.map((gameResult) => (
+        <>
+          <Link to={`/games/${gameResult.gameId}`}>
+            <Card>
+              <CardHeader>
+                <CardTitle>{gameResult.gameName}</CardTitle>
+                <CardDescription>{gameResult.date}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {gameResult.bbChanges.map((bbChange) => (
+                  <div key={bbChange.userId}>
+                    {bbChange.userName}
+                    <span>{bbChange.value}</span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </Link>
+        </>
+      ))}
     </div>
   );
 }
