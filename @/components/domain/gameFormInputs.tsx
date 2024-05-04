@@ -71,7 +71,9 @@ export default function GameFormInputs({
           </div>
         );
       })}
-      <Button type="submit">Submit</Button>
+      <Button type="submit" name="_action" value={"update"}>
+        Submit
+      </Button>
     </>
   );
 }

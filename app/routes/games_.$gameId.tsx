@@ -1,7 +1,8 @@
 import GameFormInputs from "@/components/domain/gameFormInputs";
+import { Button } from "@/components/ui/button";
 import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
-import { Link, useLoaderData } from "@remix-run/react";
+import { json, redirect } from "@remix-run/cloudflare";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 
 interface Env {
   DB: D1Database;
@@ -57,11 +58,24 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
 }
 
 export const action: ActionFunction = async ({ context, request, params }) => {
+  const formData = await request.formData();
+  const action = await formData.get("_action");
   // @ts-ignore
   const env = context.cloudflare.env as Env;
-  const { results: users } = await env.DB.prepare(
-    "SELECT * FROM users"
-  ).all<User>();
+
+  if (action === "delete") {
+    // delete bb_change table
+    await env.DB.prepare("DELETE FROM bb_change WHERE game_id = ?")
+      .bind(params.gameId)
+      .run();
+
+    // delete game table
+    await env.DB.prepare("DELETE FROM games WHERE id = ?")
+      .bind(params.gameId)
+      .run();
+
+    return redirect("/games");
+  }
 
   // get game table
   const { results: bbChanges } = await env.DB.prepare(
@@ -70,7 +84,6 @@ export const action: ActionFunction = async ({ context, request, params }) => {
     .bind(params.gameId)
     .all<BBChange>();
 
-  const formData = await request.formData();
   const gameName = await formData.get("game_name");
   const date = await formData.get("date");
 
@@ -114,13 +127,19 @@ export default function Index() {
       <h1>RSOP Game</h1>
       <Link to="/">home</Link>
 
-      <form method="post" className="space-y-8">
+      <Form method="post" className="space-y-8">
         <GameFormInputs
           defaultBBChanges={defaultBBChanges}
           defaultDate={new Date(game?.date ?? "")}
           defaultName={game?.name ?? ""}
         />
-      </form>
+      </Form>
+
+      <Form method="post" className="space-y-8">
+        <Button type="submit" name="_action" value={"delete"}>
+          delete
+        </Button>
+      </Form>
     </div>
   );
 }
