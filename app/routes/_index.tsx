@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "~/@/components/ui/card";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
@@ -19,8 +19,8 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "~/@/components/ui/button";
+import { Separator } from "~/@/components/ui/separator";
 
 interface Env {
   DB: D1Database;

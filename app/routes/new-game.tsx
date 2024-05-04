@@ -1,4 +1,4 @@
-import GameFormInputs from "@/components/domain/gameFormInputs";
+import GameFormInputs from "~/@/components/domain/gameFormInputs";
 import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
@@ -66,15 +66,20 @@ export default function Index() {
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>RSOP Game</h1>
-      <Link to="/">home</Link>
+      <div className="flex justify-between mt-3">
+        <Link to="/">
+          <h1 className="text-2xl ml-2">♠ RSOP</h1>
+        </Link>
+      </div>
 
       <form method="post" className="space-y-8">
-        <GameFormInputs
-          defaultBBChanges={defaultBBChanges}
-          defaultDate={new Date()}
-          defaultName=""
-        />
+        <div className="flex justify-center my-6">
+          <GameFormInputs
+            defaultBBChanges={defaultBBChanges}
+            defaultDate={new Date()}
+            defaultName=""
+          />
+        </div>
       </form>
     </div>
   );

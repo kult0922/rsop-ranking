@@ -1,5 +1,5 @@
-import GameFormInputs from "@/components/domain/gameFormInputs";
-import { Button } from "@/components/ui/button";
+import GameFormInputs from "~/@/components/domain/gameFormInputs";
+import { Button } from "~/@/components/ui/button";
 import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json, redirect } from "@remix-run/cloudflare";
 import { Form, Link, useLoaderData } from "@remix-run/react";
@@ -104,21 +104,33 @@ export default function Index() {
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>RSOP Game</h1>
-      <Link to="/">home</Link>
+      <div className="flex justify-between mt-3">
+        <Link to="/">
+          <h1 className="text-2xl ml-2">♠ RSOP</h1>
+        </Link>
+      </div>
 
       <Form method="post" className="space-y-8">
-        <GameFormInputs
-          defaultBBChanges={defaultBBChanges}
-          defaultDate={new Date(game?.date ?? "")}
-          defaultName={game?.name ?? ""}
-        />
+        <div className="flex justify-center my-6">
+          <GameFormInputs
+            defaultBBChanges={defaultBBChanges}
+            defaultDate={new Date(game?.date ?? "")}
+            defaultName={game?.name ?? ""}
+          />
+        </div>
       </Form>
 
-      <Form method="post" className="space-y-8">
-        <Button type="submit" name="_action" value={"delete"}>
-          delete
-        </Button>
+      <Form method="post" className="space-y-8 my-4">
+        <div className="flex justify-end mr-6">
+          <Button
+            variant="destructive"
+            type="submit"
+            name="_action"
+            value={"delete"}
+          >
+            delete
+          </Button>
+        </div>
       </Form>
     </div>
   );
