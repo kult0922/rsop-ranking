@@ -228,7 +228,7 @@ export default function Index() {
       <div className="flex justify-center my-4">
         <Card className="w-[94%] h-96">
           <CardHeader>
-            <CardTitle>BB faise and fall</CardTitle>
+            <CardTitle>BB raise and fall</CardTitle>
           </CardHeader>
           <CardContent className="w-full h-[90%]">
             <ResponsiveContainer width="100%">
@@ -240,7 +240,7 @@ export default function Index() {
                     type="monotone"
                     dataKey={user.name}
                     stroke={colors[index]}
-                    strokeWidth={2}
+                    strokeWidth={1.5}
                   />
                 ))}
                 <CartesianGrid />

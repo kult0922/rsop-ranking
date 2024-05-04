@@ -57,7 +57,7 @@ export const action: ActionFunction = async ({ context, request, params }) => {
       .bind(params.gameId)
       .run();
 
-    return redirect("/games");
+    return redirect("/");
   }
 
   // get game table
@@ -88,7 +88,7 @@ export const action: ActionFunction = async ({ context, request, params }) => {
       .run();
   }
 
-  return json({ formData });
+  return redirect("/");
 };
 
 export default function Index() {

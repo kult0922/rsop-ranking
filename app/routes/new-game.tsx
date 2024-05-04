@@ -1,6 +1,6 @@
 import GameFormInputs from "~/@/components/domain/gameFormInputs";
 import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
+import { json, redirect } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
 import { User } from "~/schema/db";
 
@@ -50,7 +50,7 @@ export const action: ActionFunction = async ({ context, request }) => {
       .run();
   }
 
-  return json({ formData });
+  return redirect(`/`);
 };
 
 export default function Index() {
