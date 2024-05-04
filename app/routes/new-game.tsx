@@ -2,28 +2,11 @@ import GameFormInputs from "@/components/domain/gameFormInputs";
 import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
+import { User } from "~/schema/db";
 
 interface Env {
   DB: D1Database;
 }
-
-export type User = {
-  id: number;
-  name: string;
-};
-
-export type Game = {
-  id: number;
-  name: string;
-  date: Date;
-};
-
-type BBChange = {
-  id: number;
-  value: number;
-  user_id: number;
-  game_id: number;
-};
 
 export async function loader({ context }: LoaderFunctionArgs) {
   // @ts-ignore
@@ -59,7 +42,7 @@ export const action: ActionFunction = async ({ context, request }) => {
 
   for (const user of users) {
     const bbChange = await formData.get(`bb_changes_${user.id}`);
-    if (bbChange == null) continue;
+    if (bbChange == null || bbChange === "") continue;
     const { success } = await env.DB.prepare(
       `insert into bb_change (value, user_id, game_id) values (?, ?, ?)`
     )

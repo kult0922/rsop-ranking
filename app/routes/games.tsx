@@ -1,28 +1,11 @@
 import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
+import { Game } from "~/schema/db";
 
 interface Env {
   DB: D1Database;
 }
-
-type User = {
-  id: number;
-  name: string;
-};
-
-type Game = {
-  id: number;
-  name: string;
-  date: string;
-};
-
-type BBChange = {
-  id: number;
-  value: number;
-  user_id: number;
-  game_id: number;
-};
 
 export async function loader({ context }: LoaderFunctionArgs) {
   // @ts-ignore

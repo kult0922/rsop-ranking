@@ -3,28 +3,11 @@ import { Button } from "@/components/ui/button";
 import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json, redirect } from "@remix-run/cloudflare";
 import { Form, Link, useLoaderData } from "@remix-run/react";
+import { BBChange, Game, User } from "~/schema/db";
 
 interface Env {
   DB: D1Database;
 }
-
-export type User = {
-  id: number;
-  name: string;
-};
-
-export type Game = {
-  id: number;
-  name: string;
-  date: Date;
-};
-
-type BBChange = {
-  id: number;
-  value: number;
-  user_id: number;
-  game_id: number;
-};
 
 export async function loader({ context, params }: LoaderFunctionArgs) {
   // @ts-ignore

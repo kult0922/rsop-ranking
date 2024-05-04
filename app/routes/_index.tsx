@@ -2,28 +2,11 @@ import { ResponsiveLine } from "@nivo/line";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
+import { User, Game, BBChange } from "~/schema/db";
 
 interface Env {
   DB: D1Database;
 }
-
-type User = {
-  id: number;
-  name: string;
-};
-
-type Game = {
-  id: number;
-  name: string;
-  date: string;
-};
-
-type BBChange = {
-  id: number;
-  value: number;
-  user_id: number;
-  game_id: number;
-};
 
 export async function loader({ context }: LoaderFunctionArgs) {
   // @ts-ignore
@@ -66,6 +49,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
     const userValues = [{ x: "", y: acc }];
     for (const game of heldGames) {
       const bb = gameId2Users.get(game.id)!.find((bb) => bb.userId === userId);
+      console.log(user.name, "bb", bb);
       acc += bb?.value ?? 0;
       userValues.push({ x: game.name, y: acc });
     }
@@ -103,12 +87,16 @@ export default function Index() {
         <ResponsiveLine
           data={data}
           colors={{ scheme: "dark2" }}
-          curve="cardinal"
           theme={{
+            tooltip: {
+              container: {
+                color: "#000",
+              },
+            },
             legends: {
               text: {
-                fontSize: 12,
                 fill: "#fff",
+                fontSize: 12,
               },
             },
             axis: {
@@ -128,10 +116,9 @@ export default function Index() {
           xScale={{ type: "point" }}
           yScale={{
             type: "linear",
+            stacked: false,
             min: "auto",
             max: "auto",
-            stacked: true,
-            reverse: false,
           }}
           yFormat=" >-.2f"
           axisTop={null}
@@ -158,7 +145,7 @@ export default function Index() {
           pointColor={{ theme: "background" }}
           pointBorderWidth={2}
           pointBorderColor={{ from: "serieColor" }}
-          pointLabelYOffset={-12}
+          pointLabelYOffset={0}
           enableTouchCrosshair={true}
           useMesh={true}
           legends={[
