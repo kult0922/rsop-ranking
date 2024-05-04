@@ -79,6 +79,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
   }
 
   const dataByUsers: any[] = [];
+  const currentResult: { name: string; value: number }[] = [];
 
   for (const userId of participantUserIds) {
     const user = users.find((user) => user.id === userId);
@@ -95,6 +96,10 @@ export async function loader({ context }: LoaderFunctionArgs) {
       name: user.name,
       id: user.id,
       data: userValues,
+    });
+    currentResult.push({
+      name: user.name,
+      value: acc,
     });
   }
 
@@ -115,20 +120,6 @@ export async function loader({ context }: LoaderFunctionArgs) {
       }
     }
     data.push(point);
-  }
-
-  const currentResult: { name: string; value: number }[] = [];
-  for (const user of participantUsers) {
-    const lastGame = heldGames[heldGames.length - 1];
-    const bb = gameId2Users
-      .get(lastGame.id)!
-      .find((bb) => bb.userId === user.id);
-    if (bb) {
-      currentResult.push({
-        name: user.name,
-        value: bb.value,
-      });
-    }
   }
   currentResult.sort((a, b) => b.value - a.value);
 
@@ -174,6 +165,9 @@ const rankIcon = (rank: number) => {
 export default function Index() {
   const { gameResults, data, participantUsers, currentResult } =
     useLoaderData<typeof loader>();
+
+  console.log(data);
+  console.log(currentResult);
 
   const colors = [
     "#ff595e",
