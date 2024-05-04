@@ -181,108 +181,114 @@ export default function Index() {
   ];
 
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <div className="flex justify-between mt-3">
-        <h1 className="text-2xl ml-2">♠ RSOP</h1>
-        <Link to="/new-game" className="mr-2">
-          <Button variant="outline">new game</Button>
-        </Link>
-      </div>
+    <>
+      <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
+        <div className="flex justify-between mt-3">
+          <h1 className="text-2xl ml-2">♠ RSOP</h1>
+          <Link to="/new-game" className="mr-2">
+            <Button variant="outline">new game</Button>
+          </Link>
+        </div>
 
-      <Separator className="my-2" />
+        <Separator className="my-2" />
 
-      <div className="flex justify-center my-4">
-        <Card className="w-3/4">
-          <CardHeader>
-            <CardTitle>Ranking</CardTitle>
-            <CardDescription>Total BB</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {currentResult.map((result, index) => (
-              <div key={result.name} className="flex m-2">
-                <div className="w-16 flex">
-                  <div className="w-6">{rankIcon(index + 1)}</div>
-                  {index + 1}
-                  {rankSufix(index + 1)}
-                </div>
-                <div className="w-16">{result.name}</div>
-                {result.value > 0 ? (
-                  <div className="text-green-500">+{result.value}</div>
-                ) : (
-                  <div className="text-red-500">{result.value}</div>
-                )}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-      <h2 className="text-xl ml-2 my-4 ">History</h2>
-      <Separator className="my-3" />
-
-      <div className="flex justify-center my-4">
-        <Card className="w-[94%] h-96">
-          <CardHeader>
-            <CardTitle>BB raise and fall</CardTitle>
-          </CardHeader>
-          <CardContent className="w-full h-[90%]">
-            <ResponsiveContainer width="100%">
-              <LineChart height={400} data={data}>
-                {participantUsers.map((user, index) => (
-                  <Line
-                    key={`line-${index}`}
-                    dot={{ fill: colors[index], r: 3 }}
-                    connectNulls
-                    dataKey={user.name}
-                    stroke={colors[index]}
-                    strokeWidth={1.5}
-                  />
-                ))}
-                <CartesianGrid />
-                <YAxis />
-                <XAxis dataKey="name" />
-                <Legend />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#000",
-                    border: "none",
-                  }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {gameResults.map((gameResult) => (
-        <Link to={`/games/${gameResult.gameId}`}>
-          <div className="flex justify-center m-2">
-            <Card className="w-3/4">
-              <CardHeader>
-                <CardTitle>{gameResult.gameName}</CardTitle>
-                <CardDescription>{gameResult.date}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {gameResult.bbChanges.map((bbChange, index) => (
-                  <div className="flex" key={bbChange.userId}>
-                    <div className="w-8">
-                      {index + 1}
-                      {rankSufix(index + 1)}
-                    </div>
-                    <div className="ml-2 w-20">{bbChange.userName}</div>
-                    {bbChange.value > 0 ? (
-                      <div className="ml-2 text-green-500">
-                        +{bbChange.value}
-                      </div>
-                    ) : (
-                      <div className="ml-2 text-red-500">{bbChange.value}</div>
-                    )}
+        <div className="flex justify-center my-4">
+          <Card className="w-80">
+            <CardHeader>
+              <CardTitle>Ranking</CardTitle>
+              <CardDescription>Total BB</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {currentResult.map((result, index) => (
+                <div key={result.name} className="flex m-2">
+                  <div className="w-16 flex">
+                    <div className="w-6">{rankIcon(index + 1)}</div>
+                    {index + 1}
+                    {rankSufix(index + 1)}
                   </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        </Link>
-      ))}
-    </div>
+                  <div className="w-16 mr-3">{result.name}</div>
+                  {result.value > 0 ? (
+                    <div className="text-green-500">+{result.value}</div>
+                  ) : (
+                    <div className="text-red-500">{result.value}</div>
+                  )}
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+        <h2 className="text-xl ml-2 my-4 ">History</h2>
+        <Separator className="my-3" />
+
+        <div className="flex justify-center my-4">
+          <Card className="w-[94%] h-96">
+            <CardHeader>
+              <CardTitle>BB raise and fall</CardTitle>
+            </CardHeader>
+            <CardContent className="w-full h-[90%]">
+              <ResponsiveContainer width="100%">
+                <LineChart height={400} data={data}>
+                  {participantUsers.map((user, index) => (
+                    <Line
+                      key={`line-${index}`}
+                      dot={{ fill: colors[index], r: 3 }}
+                      connectNulls
+                      dataKey={user.name}
+                      stroke={colors[index]}
+                      strokeWidth={1.5}
+                    />
+                  ))}
+                  <CartesianGrid />
+                  <YAxis />
+                  <XAxis dataKey="name" />
+                  <Legend />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#000",
+                      border: "none",
+                    }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="flex justify-center flex-wrap m-2">
+          {gameResults.map((gameResult) => (
+            <div className="m-3" key={gameResult.gameId}>
+              <Link to={`/games/${gameResult.gameId}`}>
+                <Card className="w-80">
+                  <CardHeader>
+                    <CardTitle>{gameResult.gameName}</CardTitle>
+                    <CardDescription>{gameResult.date}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {gameResult.bbChanges.map((bbChange, index) => (
+                      <div className="flex" key={bbChange.userId}>
+                        <div className="w-8">
+                          {index + 1}
+                          {rankSufix(index + 1)}
+                        </div>
+                        <div className="ml-2 w-20">{bbChange.userName}</div>
+                        {bbChange.value > 0 ? (
+                          <div className="ml-2 text-green-500">
+                            +{bbChange.value}
+                          </div>
+                        ) : (
+                          <div className="ml-2 text-red-500">
+                            {bbChange.value}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
