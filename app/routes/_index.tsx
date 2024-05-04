@@ -257,34 +257,39 @@ export default function Index() {
         <div className="flex justify-center flex-wrap m-2">
           {gameResults.map((gameResult) => (
             <div className="m-3" key={gameResult.gameId}>
-              <Link to={`/games/${gameResult.gameId}`}>
-                <Card className="w-80">
-                  <CardHeader>
+              <Card className="w-80">
+                <CardHeader>
+                  <div className="flex justify-between items-center">
                     <CardTitle>{gameResult.gameName}</CardTitle>
-                    <CardDescription>{gameResult.date}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {gameResult.bbChanges.map((bbChange, index) => (
-                      <div className="flex" key={bbChange.userId}>
-                        <div className="w-8">
-                          {index + 1}
-                          {rankSufix(index + 1)}
-                        </div>
-                        <div className="ml-2 w-20">{bbChange.userName}</div>
-                        {bbChange.value > 0 ? (
-                          <div className="ml-2 text-green-500">
-                            +{bbChange.value}
-                          </div>
-                        ) : (
-                          <div className="ml-2 text-red-500">
-                            {bbChange.value}
-                          </div>
-                        )}
+                    <Link to={`/games/${gameResult.gameId}`}>
+                      <Button className="" variant="outline">
+                        Edit
+                      </Button>
+                    </Link>
+                  </div>
+                  <CardDescription>{gameResult.date}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {gameResult.bbChanges.map((bbChange, index) => (
+                    <div className="flex" key={bbChange.userId}>
+                      <div className="w-8">
+                        {index + 1}
+                        {rankSufix(index + 1)}
                       </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              </Link>
+                      <div className="ml-2 w-20">{bbChange.userName}</div>
+                      {bbChange.value > 0 ? (
+                        <div className="ml-2 text-green-500">
+                          +{bbChange.value}
+                        </div>
+                      ) : (
+                        <div className="ml-2 text-red-500">
+                          {bbChange.value}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
             </div>
           ))}
         </div>
