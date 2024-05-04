@@ -231,7 +231,7 @@ export default function Index() {
                   <Line
                     key={`line-${index}`}
                     dot={{ fill: colors[index], r: 3 }}
-                    type="monotone"
+                    connectNulls
                     dataKey={user.name}
                     stroke={colors[index]}
                     strokeWidth={1.5}
