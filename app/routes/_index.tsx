@@ -19,7 +19,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import { Button } from "~/@/components/ui/button";
+import { Button, buttonVariants } from "~/@/components/ui/button";
 import { Separator } from "~/@/components/ui/separator";
 import { CURRENT_SEASON } from "~/constant";
 import {
@@ -163,6 +163,10 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+function orgRound(value: number, base: number) {
+  return Math.round(value * base) / base;
+}
+
 const rankSufix = (rank: number) => {
   if (rank === 1) {
     return "st";
@@ -259,9 +263,13 @@ export default function Index() {
                   </div>
                   <div className="w-16 mr-3">{result.name}</div>
                   {result.value > 0 ? (
-                    <div className="text-green-500">+{result.value}</div>
+                    <div className="text-green-500">
+                      +{orgRound(result.value, 10)}
+                    </div>
                   ) : (
-                    <div className="text-red-500">{result.value}</div>
+                    <div className="text-red-500">
+                      {orgRound(result.value, 10)}
+                    </div>
                   )}
                 </div>
               ))}
