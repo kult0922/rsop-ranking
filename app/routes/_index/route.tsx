@@ -197,7 +197,10 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 export const meta: MetaFunction = () => {
   return [
     { title: "RSOP Ranking" },
-    { name: "description", content: "Welcome to RSOP Ranking!" },
+    {
+      name: "description",
+      content: "https://avatars.githubusercontent.com/u/38486600",
+    },
   ];
 };
 
