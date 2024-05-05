@@ -203,6 +203,18 @@ export const meta: MetaFunction = () => {
       property: "og:image",
       content: "https://rsop-ranking.pages.dev/ogp.webp",
     },
+    {
+      property: "og:url",
+      content: "https://rsop-ranking.pages.dev",
+    },
+    {
+      property: "og:title",
+      content: ":RSOP Ranking",
+    },
+    {
+      property: "og:description",
+      content: ":RSOP Ranking web app",
+    },
   ];
 };
 
