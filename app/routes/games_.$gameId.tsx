@@ -3,7 +3,8 @@ import { Button } from "~/@/components/ui/button";
 import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { json, redirect } from "@remix-run/cloudflare";
 import { Form, Link, useLoaderData } from "@remix-run/react";
-import { BBChange, Game, User } from "~/schema/db";
+import { BBChange, Game, Season, User } from "~/schema/db";
+import { CURRENT_SEASON } from "~/constant";
 
 interface Env {
   DB: D1Database;
@@ -27,6 +28,10 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
     "SELECT * FROM users"
   ).all<User>();
 
+  const { results: seasons } = await env.DB.prepare(
+    "SELECT * FROM seasons"
+  ).all<Season>();
+
   const bbChanges_ = bbChanges.map((bbChange) => {
     return {
       ...bbChange,
@@ -37,6 +42,8 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
   return json({
     game,
     bbChanges_,
+    seasons,
+    currentSeason: CURRENT_SEASON,
   });
 }
 
@@ -69,12 +76,13 @@ export const action: ActionFunction = async ({ context, request, params }) => {
 
   const gameName = await formData.get("game_name");
   const date = await formData.get("date");
+  const season = await formData.get("season");
 
   // games table update
   const { success } = await env.DB.prepare(
-    `update games set name=?, date=? where id = ?`
+    `update games set name=?, date=?, season_id=? where id = ?`
   )
-    .bind(gameName, date, params.gameId)
+    .bind(gameName, date, season, params.gameId)
     .run();
 
   for (const bbChange_ of bbChanges) {
@@ -92,7 +100,8 @@ export const action: ActionFunction = async ({ context, request, params }) => {
 };
 
 export default function Index() {
-  const { game, bbChanges_ } = useLoaderData<typeof loader>();
+  const { game, bbChanges_, seasons, currentSeason } =
+    useLoaderData<typeof loader>();
 
   const defaultBBChanges = bbChanges_.map((bbChange) => {
     return {
@@ -113,6 +122,8 @@ export default function Index() {
       <Form method="post" className="space-y-8">
         <div className="flex justify-center my-6">
           <GameFormInputs
+            defaultSeason={currentSeason}
+            seasons={seasons}
             defaultBBChanges={defaultBBChanges}
             defaultDate={new Date(game?.date ?? "")}
             defaultName={game?.name ?? ""}

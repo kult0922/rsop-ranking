@@ -1,0 +1,7 @@
+-- Migration number: 0004 	 2024-05-05T03:48:02.310Z
+CREATE TABLE `seasons` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `name` TEXT NOT NULL
+);
+
+

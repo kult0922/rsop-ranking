@@ -11,6 +11,20 @@ You will be utilizing Wrangler for local development to emulate the Cloudflare r
 npm run dev
 ```
 
+### migration
+
+crete migration file
+
+```
+npx wrangler d1 migrations create rsop {migratin_file_name}
+```
+
+edit migration file, then
+
+```
+npx wrangler d1 migrations apply rsop
+```
+
 Open up [http://127.0.0.1:8788](http://127.0.0.1:8788) and you should be ready to go!
 
 ## Deployment

@@ -21,28 +21,38 @@ import {
 } from "recharts";
 import { Button } from "~/@/components/ui/button";
 import { Separator } from "~/@/components/ui/separator";
+import { CURRENT_SEASON } from "~/constant";
 
 interface Env {
   DB: D1Database;
 }
 
-export async function loader({ context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   // @ts-ignore
   const env = context.cloudflare.env as Env;
+
+  let { searchParams } = new URL(request.url);
+  const season = searchParams.get("season") ?? CURRENT_SEASON;
 
   const { results: users } = await env.DB.prepare(
     "SELECT * FROM users"
   ).all<User>();
 
   const { results: games } = await env.DB.prepare(
-    "SELECT * FROM games"
-  ).all<Game>();
+    "SELECT * FROM games WHERE season_id = ?"
+  )
+    .bind(season)
+    .all<Game>();
 
-  const { results: bbChange } = await env.DB.prepare(
+  const { results: allBBChange } = await env.DB.prepare(
     "SELECT * FROM bb_change"
   ).all<BBChange>();
-
   games.sort((a, b) => a.date.localeCompare(b.date));
+
+  // 現在のseasonのみを取得
+  const bbChange = allBBChange.filter((bb) =>
+    games.find((game) => game.id === bb.game_id)
+  );
 
   // 重複を削除してユーザIUを取得
   const participantUserIds = new Set(bbChange.map((bb) => bb.user_id));

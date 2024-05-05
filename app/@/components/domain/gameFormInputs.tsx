@@ -17,10 +17,22 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { Season } from "~/schema/db";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 type Props = {
   defaultDate: Date;
   defaultName: string;
+  defaultSeason: number;
+  seasons: Season[];
   defaultBBChanges: {
     userId: number;
     userName: string;
@@ -31,14 +43,33 @@ type Props = {
 export default function GameFormInputs({
   defaultDate,
   defaultName,
+  defaultSeason,
+  seasons,
   defaultBBChanges,
 }: Props) {
   const [date, setDate] = useState(defaultDate);
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Game</CardTitle>
-        <CardDescription>Enter the game details</CardDescription>
+        <div className="flex justify-between items-center">
+          <CardTitle>Register new game</CardTitle>
+          <Select defaultValue={defaultSeason.toString()} name="season">
+            <SelectTrigger className="w-[110px]">
+              <SelectValue placeholder="Seasons" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {seasons.map((season) => {
+                  return (
+                    <SelectItem key={season.id} value={season.id.toString()}>
+                      {season.name}
+                    </SelectItem>
+                  );
+                })}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
       </CardHeader>
       <CardContent>
         Game Name

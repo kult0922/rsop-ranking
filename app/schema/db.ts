@@ -3,6 +3,11 @@ export type User = {
   name: string;
 };
 
+export type Season = {
+  id: number;
+  name: string;
+};
+
 export type Game = {
   id: number;
   name: string;
