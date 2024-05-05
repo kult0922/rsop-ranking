@@ -32,6 +32,7 @@ import {
 } from "~/@/components/ui/select";
 import { useNavigate } from "@remix-run/react";
 import { orgRound, rankIcon, rankSufix } from "./functions/utils";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 interface Env {
   DB: D1Database;
@@ -351,6 +352,16 @@ export default function Index() {
             </div>
           ))}
         </div>
+      </div>
+
+      <Separator className="my-2" />
+      <div className="my-6 flex justify-center">
+        <a href="https://github.com/kult0922/rsop-ranking">
+          <div className="flex">
+            <GitHubLogoIcon className="h-6 w-6" />
+            <div className="mx-2 underline">Code</div>
+          </div>
+        </a>
       </div>
     </>
   );
