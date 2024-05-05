@@ -41,6 +41,11 @@ type UserAttribute = User & {
   color: string;
 };
 
+type ChartPoint = {
+  name: string;
+  [key: string]: number | string;
+};
+
 export async function loader({ context, request }: LoaderFunctionArgs) {
   // @ts-ignore
   const env = context.cloudflare.env as Env;
@@ -96,27 +101,26 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   );
 
   const heldGameIds = new Set(bbChange.map((bb) => bb.game_id));
-
   const heldGames = games.filter((game) => heldGameIds.has(game.id));
 
-  const gameId2Users = new Map<
+  const gameResults = new Map<
     number,
     { userId: number; value: number; userName: string }[]
   >();
   bbChange.forEach((bb) => {
-    if (!gameId2Users.has(bb.game_id)) {
-      gameId2Users.set(bb.game_id, []);
+    if (!gameResults.has(bb.game_id)) {
+      gameResults.set(bb.game_id, []);
     }
-    gameId2Users.get(bb.game_id)!.push({
+    gameResults.get(bb.game_id)!.push({
       userId: bb.user_id,
       value: bb.value,
       userName: users.find((user) => user.id === bb.user_id)?.name ?? "",
     });
   });
 
-  const gameResults = [];
-  for (const [gameId, bbChanges] of gameId2Users) {
-    gameResults.push({
+  const gameResultArray = [];
+  for (const [gameId, bbChanges] of gameResults) {
+    gameResultArray.push({
       gameId,
       bbChanges: bbChanges.sort((a, b) => b.value - a.value),
       gameName: games.find((game) => game.id === gameId)?.name,
@@ -124,7 +128,17 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     });
   }
 
-  const dataByUsers: any[] = [];
+  const dataByUsers: {
+    name: string;
+    id: number;
+    data: Map<
+      number,
+      {
+        acc: number;
+        gameName: string;
+      }
+    >;
+  }[] = [];
   const currentResult: { name: string; value: number }[] = [];
 
   for (const userId of participantUserIds) {
@@ -133,7 +147,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     let acc = 0;
     const userValues = new Map<number, { acc: number; gameName: string }>();
     for (const game of heldGames) {
-      const bb = gameId2Users.get(game.id)!.find((bb) => bb.userId === userId);
+      const bb = gameResults.get(game.id)!.find((bb) => bb.userId === userId);
       if (!bb) continue;
       acc = orgRound(acc + bb.value, 10);
       userValues.set(game.id, { acc, gameName: game.name });
@@ -149,29 +163,30 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     });
   }
 
-  const data = [];
+  const dataForChart = [];
   // すべての参加者のグラフの一番初めに0を打つ
-  const initPoint: any = { name: "" };
+  const initPoint: ChartPoint = { name: "" };
+
   for (const user of participantUsers) {
     initPoint[user.name] = 0;
   }
-  data.push(initPoint);
+  dataForChart.push(initPoint);
 
   for (const game of heldGames) {
-    const point: any = { name: game.name };
+    const point: ChartPoint = { name: game.name };
     for (const user of dataByUsers) {
       const value = user.data.get(game.id);
       if (value) {
         point[user.name] = value.acc;
       }
     }
-    data.push(point);
+    dataForChart.push(point);
   }
   currentResult.sort((a, b) => b.value - a.value);
 
   return json({
-    data,
-    gameResults,
+    dataForChart,
+    gameResultArray,
     currentResult,
     season,
     seasons,
@@ -189,8 +204,8 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   const navigate = useNavigate();
   const {
-    gameResults,
-    data,
+    gameResultArray,
+    dataForChart,
     participantUsersAttribute,
     currentResult,
     season,
@@ -267,7 +282,7 @@ export default function Index() {
             </CardHeader>
             <CardContent className="w-full h-[90%]">
               <ResponsiveContainer width="100%">
-                <LineChart height={400} data={data}>
+                <LineChart height={400} data={dataForChart}>
                   {participantUsersAttribute.map((user, index) => (
                     <Line
                       key={`line-${index}`}
@@ -294,7 +309,7 @@ export default function Index() {
           </Card>
         </div>
         <div className="flex justify-center flex-wrap m-2">
-          {gameResults.map((gameResult) => (
+          {gameResultArray.map((gameResult) => (
             <div className="m-3" key={gameResult.gameId}>
               <Card className="w-80">
                 <CardHeader>
