@@ -200,7 +200,7 @@ export const meta: MetaFunction = () => {
     { name: "description", content: "Welcome to RSOP Ranking!" },
     {
       property: "og:image",
-      content: "https://avatars.githubusercontent.com/u/38486600",
+      content: "https://rsop-ranking.pages.dev/ogp.webp",
     },
   ];
 };
