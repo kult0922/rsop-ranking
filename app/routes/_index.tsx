@@ -112,7 +112,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     for (const game of heldGames) {
       const bb = gameId2Users.get(game.id)!.find((bb) => bb.userId === userId);
       if (!bb) continue;
-      acc += bb.value;
+      acc = orgRound(acc + bb.value, 10);
       userValues.set(game.id, { acc, gameName: game.name });
     }
     dataByUsers.push({
@@ -202,9 +202,6 @@ export default function Index() {
     seasons,
   } = useLoaderData<typeof loader>();
 
-  console.log(data);
-  console.log(currentResult);
-
   const colors = [
     "#ff595e",
     "#ff924c",
@@ -263,13 +260,9 @@ export default function Index() {
                   </div>
                   <div className="w-16 mr-3">{result.name}</div>
                   {result.value > 0 ? (
-                    <div className="text-green-500">
-                      +{orgRound(result.value, 10)}
-                    </div>
+                    <div className="text-green-500">+{result.value}</div>
                   ) : (
-                    <div className="text-red-500">
-                      {orgRound(result.value, 10)}
-                    </div>
+                    <div className="text-red-500">{result.value}</div>
                   )}
                 </div>
               ))}
