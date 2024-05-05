@@ -19,7 +19,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import { Button, buttonVariants } from "~/@/components/ui/button";
+import { Button } from "~/@/components/ui/button";
 import { Separator } from "~/@/components/ui/separator";
 import { CURRENT_SEASON } from "~/constant";
 import {
@@ -31,10 +31,15 @@ import {
   SelectValue,
 } from "~/@/components/ui/select";
 import { useNavigate } from "@remix-run/react";
+import { orgRound, rankIcon, rankSufix } from "./functions/utils";
 
 interface Env {
   DB: D1Database;
 }
+
+type UserAttribute = User & {
+  color: string;
+};
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
   // @ts-ignore
@@ -62,6 +67,17 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   ).all<BBChange>();
   games.sort((a, b) => a.date.localeCompare(b.date));
 
+  const colors = [
+    "#ff595e",
+    "#ff924c",
+    "#ffca3a",
+    "#8ac926",
+    "#52a675",
+    "#1982c4",
+    "#6a4c93",
+    "#4267ac",
+  ];
+
   // 現在のseasonのみを取得
   const bbChange = allBBChange.filter((bb) =>
     games.find((game) => game.id === bb.game_id)
@@ -72,6 +88,13 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const participantUsers = users.filter((user) =>
     participantUserIds.has(user.id)
   );
+
+  const participantUsersAttribute: UserAttribute[] = participantUsers.map(
+    (user, index) => {
+      return { ...user, color: colors[index] };
+    }
+  );
+
   const heldGameIds = new Set(bbChange.map((bb) => bb.game_id));
 
   const heldGames = games.filter((game) => heldGameIds.has(game.id));
@@ -152,7 +175,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     currentResult,
     season,
     seasons,
-    participantUsers,
+    participantUsersAttribute,
   });
 }
 
@@ -163,55 +186,16 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-function orgRound(value: number, base: number) {
-  return Math.round(value * base) / base;
-}
-
-const rankSufix = (rank: number) => {
-  if (rank === 1) {
-    return "st";
-  } else if (rank === 2) {
-    return "nd";
-  } else if (rank === 3) {
-    return "rd";
-  } else {
-    return "th";
-  }
-};
-
-const rankIcon = (rank: number) => {
-  if (rank === 1) {
-    return "🥇";
-  } else if (rank === 2) {
-    return "🥈";
-  } else if (rank === 3) {
-    return "🥉";
-  } else {
-    return " ";
-  }
-};
-
 export default function Index() {
   const navigate = useNavigate();
   const {
     gameResults,
     data,
-    participantUsers,
+    participantUsersAttribute,
     currentResult,
     season,
     seasons,
   } = useLoaderData<typeof loader>();
-
-  const colors = [
-    "#ff595e",
-    "#ff924c",
-    "#ffca3a",
-    "#8ac926",
-    "#52a675",
-    "#1982c4",
-    "#6a4c93",
-    "#4267ac",
-  ];
 
   return (
     <>
@@ -284,13 +268,13 @@ export default function Index() {
             <CardContent className="w-full h-[90%]">
               <ResponsiveContainer width="100%">
                 <LineChart height={400} data={data}>
-                  {participantUsers.map((user, index) => (
+                  {participantUsersAttribute.map((user, index) => (
                     <Line
                       key={`line-${index}`}
-                      dot={{ fill: colors[index], r: 3 }}
+                      dot={{ fill: user.color, r: 3 }}
                       connectNulls
                       dataKey={user.name}
-                      stroke={colors[index]}
+                      stroke={user.color}
                       strokeWidth={1.5}
                     />
                   ))}
