@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ context, request }) => {
   const season = await formData.get("season");
 
   const { meta } = await env.DB.prepare(
-    `insert into games (name, date, season) values (?, ?, ?)`
+    `insert into games (name, date, season_id) values (?, ?, ?)`
   )
     .bind(gameName, date, season)
     .run();
