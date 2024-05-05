@@ -1,6 +1,6 @@
 # Welcome to RSOP Ranking!
 
-The visualizer for poker plaers
+The visualizer for poker players
 
 ## Development
 
