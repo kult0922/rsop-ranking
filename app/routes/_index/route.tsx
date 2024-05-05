@@ -221,7 +221,9 @@ export default function Index() {
     <>
       <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
         <div className="flex justify-between mt-3">
-          <h1 className="text-2xl ml-2">♠ RSOP</h1>
+          <h1 className="text-2xl ml-2 font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#fc00ff] to-[#00dbde] ">
+            ♠ RSOP
+          </h1>
           <div className="mr-2">
             <Select
               defaultValue={season.toString()}
