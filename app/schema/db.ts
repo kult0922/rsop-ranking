@@ -10,6 +10,7 @@ export type Season = {
 
 export type Game = {
   id: number;
+  season_id: number;
   name: string;
   date: string;
 };

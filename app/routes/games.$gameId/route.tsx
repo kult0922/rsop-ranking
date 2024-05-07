@@ -39,11 +39,13 @@ export async function loader({ context, params }: LoaderFunctionArgs) {
     };
   });
 
+  const seasonId = game?.season_id ?? CURRENT_SEASON;
+
   return json({
     game,
     bbChanges_,
     seasons,
-    currentSeason: CURRENT_SEASON,
+    seasonId,
   });
 }
 
@@ -100,7 +102,7 @@ export const action: ActionFunction = async ({ context, request, params }) => {
 };
 
 export default function Index() {
-  const { game, bbChanges_, seasons, currentSeason } =
+  const { game, bbChanges_, seasons, seasonId } =
     useLoaderData<typeof loader>();
 
   const defaultBBChanges = bbChanges_.map((bbChange) => {
@@ -122,7 +124,7 @@ export default function Index() {
       <Form method="post" className="space-y-8">
         <div className="flex justify-center my-6">
           <GameFormInputs
-            defaultSeason={currentSeason}
+            defaultSeason={seasonId}
             seasons={seasons}
             defaultBBChanges={defaultBBChanges}
             defaultDate={new Date(game?.date ?? "")}
