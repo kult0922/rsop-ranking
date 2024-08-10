@@ -243,7 +243,7 @@ export default function Index() {
                 navigate(`/?season=${value}`);
               }}
             >
-              <SelectTrigger className="w-[100px]">
+              <SelectTrigger className="w-[110px]">
                 <SelectValue placeholder="Seasons" />
               </SelectTrigger>
               <SelectContent>
