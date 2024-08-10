@@ -245,7 +245,7 @@ export default function Index() {
             </div>
           ) : (
             <h1 className="text-2xl ml-2 font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#fc00ff] to-[#00dbde] ">
-              ♠ RSOPaaa
+              ♠ RSOP
             </h1>
           )}
           <div className="mr-2">
