@@ -233,7 +233,9 @@ export default function Index() {
     <>
       <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
         <div className="flex justify-between mt-3">
-          // NOTE: season id 3 is USA special season 🇺🇸
+          {
+            // NOTE: season id 3 is USA special season 🇺🇸
+          }
           {season === "3" ? (
             <div className="flex items-center">
               <h1 className="text-2xl ml-2 font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#FFE53B] to-[#FF2525] ">
