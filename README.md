@@ -13,6 +13,17 @@ npm run dev
 
 Open up [http://127.0.0.1:8788](http://127.0.0.1:8788) and you should be ready to go!
 
+## add season
+
+local
+
+```sh
+npx wrangler d1 execute rsop --local --command="INSERT INTO seasons (name) VALUES ('season_name');"
+```
+
+prod
+please insert row from cloudflare console
+
 ### migration
 
 crete migration file
