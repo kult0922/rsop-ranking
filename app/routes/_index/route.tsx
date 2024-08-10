@@ -233,9 +233,19 @@ export default function Index() {
     <>
       <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
         <div className="flex justify-between mt-3">
-          <h1 className="text-2xl ml-2 font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#fc00ff] to-[#00dbde] ">
-            ♠ RSOP
-          </h1>
+          // NOTE: season id 3 is USA special season 🇺🇸
+          {season === "3" ? (
+            <div className="flex items-center">
+              <h1 className="text-2xl ml-2 font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#FFE53B] to-[#FF2525] ">
+                ♠ RSOP
+              </h1>
+              <div className="text-3xl px-1">🇺🇸</div>
+            </div>
+          ) : (
+            <h1 className="text-2xl ml-2 font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#fc00ff] to-[#00dbde] ">
+              ♠ RSOPaaa
+            </h1>
+          )}
           <div className="mr-2">
             <Select
               defaultValue={season.toString()}
