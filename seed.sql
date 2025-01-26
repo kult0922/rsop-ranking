@@ -1,0 +1,17 @@
+INSERT INTO users VALUES(1,'かずま');
+INSERT INTO users VALUES(2,'まこと');
+INSERT INTO users VALUES(3,'りつや');
+INSERT INTO users VALUES(4,'かいり');
+INSERT INTO users VALUES(5,'にっこう');
+INSERT INTO users VALUES(6,'せり');
+INSERT INTO users VALUES(7,'とみー');
+INSERT INTO users VALUES(8,'ふじいけ');
+INSERT INTO seasons VALUES(1,'RSOP S1');
+INSERT INTO games VALUES(1,'RSOP S1-1','2024-03-29', 1);
+INSERT INTO games VALUES(2,'RSOP S1-2','2024-04-24', 1);
+INSERT INTO bb_change VALUES(1,1,1,-28);
+INSERT INTO bb_change VALUES(2,2,1,-97.5);
+INSERT INTO bb_change VALUES(3,3,1,119.5);
+INSERT INTO bb_change VALUES(4,4,1,52);
+INSERT INTO bb_change VALUES(5,6,1,-29);
+INSERT INTO bb_change VALUES(6,7,1,-17);
