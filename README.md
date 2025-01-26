@@ -8,6 +8,7 @@ You will be utilizing Wrangler for local development to emulate the Cloudflare r
 
 ```sh
 # start the remix dev server and wrangler
+npm install
 npm run dev
 ```
 
