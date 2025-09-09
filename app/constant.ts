@@ -1,1 +1,1 @@
-export const CURRENT_SEASON = 5;
+export const CURRENT_SEASON = 7;
