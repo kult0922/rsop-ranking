@@ -22,6 +22,7 @@ import {
 } from "../ui/select";
 
 type Props = {
+  title: string;
   defaultDate: Date;
   defaultName: string;
   defaultSeason: number;
@@ -34,6 +35,7 @@ type Props = {
 };
 
 export default function GameFormInputs({
+  title,
   defaultDate,
   defaultName,
   defaultSeason,
@@ -45,7 +47,7 @@ export default function GameFormInputs({
     <Card>
       <CardHeader>
         <div className="flex justify-between items-center">
-          <CardTitle>Register new game</CardTitle>
+          <CardTitle>{title}</CardTitle>
           <Select defaultValue={defaultSeason.toString()} name="season">
             <SelectTrigger className="w-[110px]">
               <SelectValue placeholder="Seasons" />
