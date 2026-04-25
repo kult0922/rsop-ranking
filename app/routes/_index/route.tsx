@@ -301,9 +301,14 @@ export default function Index() {
         </div>
         <div className="flex justify-between items-center">
           <h2 className="text-xl ml-3">History</h2>
-          <Link to="/new-game" className="mr-3">
-            <Button variant="outline">new game</Button>
-          </Link>
+          <div className="flex gap-2 mr-3">
+            <Link to="/new-game">
+              <Button variant="outline">new game</Button>
+            </Link>
+            <Link to="/schedule">
+              <Button variant="outline">日程調整</Button>
+            </Link>
+          </div>
         </div>
         <Separator className="my-3" />
         <div className="flex justify-center my-4">
