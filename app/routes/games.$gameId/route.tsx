@@ -124,6 +124,7 @@ export default function Index() {
       <Form method="post" className="space-y-8">
         <div className="flex justify-center my-6">
           <GameFormInputs
+            title="Edit game"
             defaultSeason={seasonId}
             seasons={seasons}
             defaultBBChanges={defaultBBChanges}
