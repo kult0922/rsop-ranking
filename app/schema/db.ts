@@ -21,3 +21,23 @@ export type BBChange = {
   user_id: number;
   game_id: number;
 };
+
+export type ScheduleEvent = {
+  id: number;
+  name: string;
+  created_at: string;
+};
+
+export type ScheduleCandidate = {
+  id: number;
+  event_id: number;
+  date: string;
+};
+
+export type ScheduleResponse = {
+  id: number;
+  event_id: number;
+  user_id: number;
+  candidate_id: number;
+  status: "ok" | "maybe" | "ng";
+};
